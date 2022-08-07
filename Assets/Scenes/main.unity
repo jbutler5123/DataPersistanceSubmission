@@ -537,7 +537,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 217085395}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 450625942}
+        m_TargetAssemblyTypeName: MainManager, Assembly-CSharp
+        m_MethodName: SaveName
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &217085395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -761,6 +773,8 @@ MonoBehaviour:
   PlayerName: 
   HighPoints: 0
   highScoreText: {fileID: 2078529056}
+  highScoreName: {fileID: 990452286}
+  highScoreNameSave: {fileID: 536099680}
 --- !u!1 &455529321
 GameObject:
   m_ObjectHideFlags: 0
@@ -923,7 +937,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &536099681
 RectTransform:
   m_ObjectHideFlags: 0

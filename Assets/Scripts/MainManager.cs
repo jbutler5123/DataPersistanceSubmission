@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainManager : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class MainManager : MonoBehaviour
     public string PlayerName;
     public int HighPoints;
     public Text highScoreText;
-    public TextMesh highScoreName;
+    public GameObject highScoreName;
 
     static bool isNameSaved;
     public GameObject highScoreNameSave;
@@ -48,7 +49,8 @@ public class MainManager : MonoBehaviour
             }
         }
         LoadScore();
-        highScoreText.text=$"Best Score : Name : {HighPoints.ToString()}";
+        //HighPoints=0;
+        highScoreText.text=$"Best Score : {PlayerName} : {HighPoints.ToString()}";
     }
 
     private void Update()
@@ -90,20 +92,20 @@ public class MainManager : MonoBehaviour
         isNameSaved=false;
         HighPoints=m_Points;
         StartCoroutine("GetName");
-        SaveScore();
+        
         }
     }
 
     [System.Serializable] class SaveData
     {
-    //public string PlayerName;
+    public string PlayerName;
     public int HighPoints;
     }
 
     public void SaveScore()
     {
     SaveData data = new SaveData();
-    //data.PlayerName = PlayerName;
+    data.PlayerName = PlayerName;
     data.HighPoints=HighPoints;
 
     string json = JsonUtility.ToJson(data);
@@ -119,7 +121,7 @@ public class MainManager : MonoBehaviour
         string json = File.ReadAllText(path);
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
-        //PlayerName = data.PlayerName;
+        PlayerName = data.PlayerName;
         HighPoints=data.HighPoints;
     }
     }
@@ -129,12 +131,15 @@ public class MainManager : MonoBehaviour
         highScoreNameSave.gameObject.SetActive(true);
         yield return new WaitUntil(()=>isNameSaved);
         highScoreNameSave.gameObject.SetActive(false);
+        SaveScore();
         
     }
 
     public void SaveName()
     {
-        PlayerName=highScoreName.text;
+        TMP_InputField tMP_Input = highScoreName.GetComponent<TMP_InputField>();
+        PlayerName=tMP_Input.text;
         isNameSaved=true;
+        //Debug.Log(PlayerName);
     }
 }
