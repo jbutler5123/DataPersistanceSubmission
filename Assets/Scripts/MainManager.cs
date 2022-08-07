@@ -19,18 +19,13 @@ public class MainManager : MonoBehaviour
     private int m_Points;
     
     private bool m_GameOver = false;
-    public static MainManager Instance;
-    public string PlayerName;
-    public int HighPoints;
     public Text highScoreText;
-    public GameObject highScoreName;
 
-    static bool isNameSaved;
-    public GameObject highScoreNameSave;
-
-    
-    
-
+    public static MainManager Instance { get; private set; }
+    private void Awake()
+    {
+        Instance = this;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -48,9 +43,7 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
-        LoadScore();
-        //HighPoints=0;
-        highScoreText.text=$"Best Score : {PlayerName} : {HighPoints.ToString()}";
+        highScoreText.text=$"Best Score : {SaveManager.Instance.PlayerName} : {SaveManager.Instance.HighPoints.ToString()}";
     }
 
     private void Update()
@@ -72,6 +65,10 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                SceneManager.LoadScene(1);
+            }
+            else if(Input.GetKeyDown(KeyCode.Escape))
+            {
                 SceneManager.LoadScene(0);
             }
         }
@@ -87,59 +84,18 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
-        if(m_Points>HighPoints)
+        if(m_Points>SaveManager.Instance.HighPoints)
         {
-        isNameSaved=false;
-        HighPoints=m_Points;
-        StartCoroutine("GetName");
+        SaveManager.Instance.HighPoints=m_Points;
+        SaveManager.Instance.SaveScore();
         
         }
     }
 
-    [System.Serializable] class SaveData
+    
+    public void ReturnToMenu()
     {
-    public string PlayerName;
-    public int HighPoints;
+        SceneManager.LoadScene(0);
     }
 
-    public void SaveScore()
-    {
-    SaveData data = new SaveData();
-    data.PlayerName = PlayerName;
-    data.HighPoints=HighPoints;
-
-    string json = JsonUtility.ToJson(data);
-  
-    File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
-    }
-
-    public void LoadScore()
-    {
-    string path = Application.persistentDataPath + "/savefile.json";
-    if (File.Exists(path))
-    {
-        string json = File.ReadAllText(path);
-        SaveData data = JsonUtility.FromJson<SaveData>(json);
-
-        PlayerName = data.PlayerName;
-        HighPoints=data.HighPoints;
-    }
-    }
-
-    IEnumerator GetName()
-    {
-        highScoreNameSave.gameObject.SetActive(true);
-        yield return new WaitUntil(()=>isNameSaved);
-        highScoreNameSave.gameObject.SetActive(false);
-        SaveScore();
-        
-    }
-
-    public void SaveName()
-    {
-        TMP_InputField tMP_Input = highScoreName.GetComponent<TMP_InputField>();
-        PlayerName=tMP_Input.text;
-        isNameSaved=true;
-        //Debug.Log(PlayerName);
-    }
 }
